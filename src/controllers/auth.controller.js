@@ -34,16 +34,16 @@ module.exports = {
         //? Eğer token yoksa oluştur:
         if (!tokenData) {
           //' token data undefined ya da null ise
-          const tokenKey = passwordEncrypt(user._id + Date.now()); //* burada kullanıcının benzersiz ıd si ile , o anın zaman damgası birleşir elde edilen girdi passwordEbcrypt fonksiyonuna verilir ve sonuç larak benersiz bi token oluşur.
+          const tokenKey = passwordEncrypt(user._id + Date.now()); //* burada kullanıcının benzersiz ıd si ile , o anın zaman damgası birleşir elde edilen girdi passwordEbcrypt fonksiyonuna verilir ve sonuç olarak benzersiz bi token oluşur.
           console.log(typeof tokenKey, tokenKey);
-          tokenData = await Token.create({ userId: user._id, token: tokenKey });
+          tokenData = await Token.create({ userId: user._id, token: tokenKey }); //' yeni oluşturulan tokenkey kullanıcının Id si ile beraber modele göre(modelda ne vermiştik userId ve token) veitabanına eklenir ve buna da tokenData der. yani şöyle bir somut örnek olabilir.tokenData= {userId: "123456", token :"12h6494jdsaks"}
         }
 
         /* TOKEN */
 
         res.status(200).send({
           error: false,
-          token: tokenData.token,
+          token: tokenData.token, //' tokene nokta retasyonuyla ulaştı tokendatanın içinden
           user,
         });
         res.status(200).send({
@@ -61,11 +61,38 @@ module.exports = {
   },
 
   logout: async (req, res) => {
-    //' Kullanıcının sistemden çıkış yapmasını sağlar.
+    /* SESSION */
+
     req.session = null; //' Oturum bilgilerini temizler.
+
+    /* TOKEN */
+
+    //* 1. Yöntem (Kısa yöntem)
+    //? Her kullanıcı için sadece 1 adet token var ise (tüm cihazlardan çıkış yap):
+
+    // console.log(req.user)
+    // const deleted = await Token.deleteOne({ userId: req.user._id }) //'  gelen userId si kaydolan _Id ye eşit olan tokeni gidip bul ve onu sil
+
+    //* 2. Yöntem:
+    //? Her kullanıcı için 1'den fazla token var ise (çoklu cihaz):
+
+    const auth = req.headers?.authorization || null; // Token ...tokenKey... //' Authorization başlığından kimlik doğrulama bilgisi (token) alınır. Eğer Authorization başlığı mevcut değilse, auth değişkeni null olarak ayarlanır.
+    const tokenKey = auth ? auth.split(" ") : null; // ['Token', '...tokenKey...'] //'Token, genellikle "Bearer <token>" veya "Token <token>" formatında saklanır. Bu nedenle, auth değişkeninin boşluk karakterine göre ayrıştırılması gerekir.
+
+    //!Eğer auth değişkeni boş değilse, yani bir Authorization başlığı varsa, bu başlık boşluk karakterine göre ikiye ayrılır ve tokenKey değişkenine bir dizi olarak atanır. Bu dizinin ilk elemanı genellikle token tipini (örneğin, "Token" veya "Bearer"), ikinci elemanı ise tokenın kendisini içerir.
+
+    let deleted = null;
+    if (tokenKey && tokenKey[0] == "Token") { //? yine de kontrolü yaptı sıfırıncı eleman Token mı baktı geri kalanaı silecek
+      deleted = await Token.deleteOne({ token: tokenKey[1] });//' Bu, Token modelini kullanarak, token değeri tokenKey[1]'e (yani ayrıştırılmış tokenın ikinci elemanına) eşit olan kaydın veritabanından silinmesini sağlar. Bu işlem asenkron olduğu için await anahtar kelimesi ile beklenir.
+    }
+
+    /* TOKEN */
+
     res.status(200).send({
       error: false,
-      message: "Çıkış yapıldı: Oturum bilgileri silindi.",
+      // message: 'Logout: Sessions Deleted.',
+      message: "Logout: Token Deleted.",
+      deleted, //* silineni gösterecek
     });
   },
 };
