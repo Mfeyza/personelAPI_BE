@@ -8,6 +8,7 @@ const Department = require("../models/department.model"); //' Department modelin
 
 module.exports = {
   list: async (req, res) => { //? Tüm departmanları listeler.
+      // const data = await Department.find(search).sort(sort).skip(skip).limit(limit)
     const data = await res.getModelList(Department); //? Önceden tanımlanmış getModelList yardımcı fonksiyonu ile departman listesini alır.
     res.status(200).send({ 
       error: false,  
@@ -42,6 +43,13 @@ module.exports = {
       new: await Department.findOne({ _id: req.params.id }), //' Güncellenmiş departmanın bilgilerini içerir.
     });
   },
+  
+   // const isDeleted = data.deletedCount >= 1 ? true : false
+
+    // res.status(isDeleted ? 204 : 404).send({
+    //     error: !isDeleted,
+    //     data
+    // })
 
   delete: async (req, res) => { //' Belirli bir departmanı siler.
     const data = await Department.deleteOne({ _id: req.params.id }); //' URL parametresindeki id'ye göre departmanı siler.
