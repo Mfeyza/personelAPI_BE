@@ -3,7 +3,21 @@
 const Personnel = require("../models/personnel.model"); //' Personnel modelini içe aktarır.
 
 module.exports = {
+
+
   list: async (req, res) => {
+      /*
+    #swagger.tags = ["Personnels"]
+    #swagger.summary = "List Personnels"
+    #swagger.description = `
+        You can send query with endpoint for search[], sort[], page and limit.
+        <ul> Examples:
+            <li>URL/?<b>search[field1]=value1&search[field2]=value2</b></li>
+            <li>URL/?<b>sort[field1]=1&sort[field2]=-1</b></li>
+            <li>URL/?<b>page=2&limit=1</b></li>
+        </ul>
+    `
+*/
     //' Personelleri listeler.
     const data = await res.getModelList(Personnel, {}, "departmentId"); //'res.getModelList fonksiyonunun ikinci parametresi olarak boş bir obje ({}) geçirilmesi, bu fonksiyona özel bir filtre uygulanmadığını belirtir. Bu durum, Personnel modeline ait tüm kayıtların filtresiz olarak sorgulanıp getirileceği anlamına gelir. İkinci parametre genellikle bir filtreleme kriteri alır; eğer bu parametre boş bir obje olarak belirtilirse, bu, "herhangi bir ek filtreleme yapma" anlamına gelir.
     //' Özel bir yardımcı fonksiyon kullanarak, personelleri departman ID'sine göre listeler.
@@ -16,6 +30,29 @@ module.exports = {
   },
 
   create: async (req, res) => {
+    /*
+#swagger.tags = ["Personnels"]
+#swagger.summary = "Create Personnel"
+#swagger.parameters['body'] = {
+    in: 'body',
+    required: true,
+    schema: {
+        username: "test",
+        password: "1234",
+        firstName: "firstName",
+        lastName: "lastName",
+        phone: "123456789",
+        email: "test@site.com",
+        title: "title",
+        salary: 2500,
+        description: "description",
+        isActive: true,
+        isAdmin: false,
+        isLead: false,
+        startedAt: "2023-10-15 13:14:15"
+    }
+}
+*/
     //'! Yeni bir personel oluşturur.
     // isLead Kontrolü:
     const isLead = req.body?.isLead || false;
@@ -36,6 +73,10 @@ module.exports = {
   },
 
   read: async (req, res) => {
+    /*
+    #swagger.tags = ["Personnels"]
+    #swagger.summary = "Get Single Personnel"
+*/
     //* Bir personelin detaylarını getirir.
     const data = await Personnel.findOne({ _id: req.params.id });
 
@@ -46,6 +87,28 @@ module.exports = {
   },
 
   update: async (req, res) => {
+    /*
+    #swagger.tags = ["Personnels"]
+    #swagger.summary = "Update Personnel"
+    #swagger.parameters['body'] = {
+        in: 'body',
+        required: true,
+        schema: {
+            username: "updatedUsername",
+            password: "4321",
+            firstName: "Dohn",
+            lastName: "Joe",
+            phone: "987654321",
+            email: "jdoetest@site.com",
+            title: "title1",
+            salary: 5000,
+            description: "updatedDescription",
+            isActive: true,
+            isAdmin: true,
+            isLead: true,
+        }
+    }
+*/
     //* Bir personeli günceller.
     //* isLead Kontrolü:
     const isLead = req.body?.isLead || false;
@@ -93,6 +156,10 @@ module.exports = {
   },
 
   delete: async (req, res) => {
+    /*
+    #swagger.tags = ["Personnels"]
+    #swagger.summary = "Delete Personnel"
+*/
     //' Bir personeli siler.
     const data = await Personnel.deleteOne({ _id: req.params.id });
 

@@ -6,7 +6,7 @@
 module.exports = (req, res, next) => {
   // Middleware fonksiyonunu tanımlar ve dışa aktarır.
   // Searching & Sorting & Pagination:
-
+  const filter = req.query?.filter || {}
   // SEARCHING: URL?search[key1]=value1&search[key2]=value2
   const search = req.query?.search || {}; //' URL'deki `search` sorgu parametresini alır veya boş bir obje tanımlar.
   for (let key in search) search[key] = { $regex: search[key], $options: "i" }; //' Her bir arama terimini regex sorgusu haline getirir.

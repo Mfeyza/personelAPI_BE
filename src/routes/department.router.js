@@ -1,34 +1,26 @@
-"use strict"; 
-
+"use strict"
 /* -------------------------------------------------------
     EXPRESS - Personnel API
 ------------------------------------------------------- */
-
-
-const router = require('express').Router();
-//' Express'in Router fonksiyonunu kullanarak yeni bir router örneği oluşturur.
-
+const router = require('express').Router()
 /* ------------------------------------------------------- */
 
-const department = require('../controllers/department.controller');
-//' Department ile ilgili işlemleri yöneten controller'ı içe aktarır.
+const department = require('../controllers/department.controller')
+const permissions = require('../middlewares/permissions')
 
 // URL: /departments
-// '/departments' URL'si için route tanımları başlar.
 
 router.route('/')
-    .get(department.list) 
-    .post(department.create); 
+    .get(permissions.isLogin, department.list)
+    .post(permissions.isAdmin, department.create)
 
 router.route('/:id')
-    .get(department.read) 
-    .put(department.update) 
-    .patch(department.update) 
-    .delete(department.delete); 
+    .get(permissions.isLogin, department.read)
+    .put(permissions.isAdmin, department.update)
+    .patch(permissions.isAdmin, department.update)
+    .delete(permissions.isAdmin, department.delete)
 
-router.get('/:id/personnels', department.personnels);
-//' GET /departments/:id/personnels - Belirli bir departmana ait personelleri listeler.
+router.get('/:id/personnels', department.personnels)
 
 /* ------------------------------------------------------- */
-module.exports = router;
-
+module.exports = router

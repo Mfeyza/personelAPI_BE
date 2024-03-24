@@ -24,7 +24,7 @@ module.exports = {
         }
     },
 
-    isLead: (req, res, next) => {
+    isAdminOrLead: (req, res, next) => {
         const departmentId = req.params?.id; //' URL parametresinden departman ID'sini alır.
     
         if (
@@ -38,4 +38,24 @@ module.exports = {
             throw new Error('NoPermission: You must login and to be Admin or Department Lead.'); //' Admin veya departman lideri olma gerektiğini belirten bir hata fırlatır.
         }
     },
+
+    isAdminOrOwn: (req, res, next) => {
+
+        const personnelId = req.params?.id
+
+        if (
+            req.user
+            && req.user.isActive
+            && (
+                req.user.isAdmin
+                || req.user._id == personnelId
+            )
+        ) {
+            next()
+        } else {
+            res.errorStatusCode = 403
+            throw new Error('NoPermission: You must login and to be Admin or Record Owner.')
+        }
+
+    }
 }

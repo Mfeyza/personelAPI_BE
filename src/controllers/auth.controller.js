@@ -8,6 +8,23 @@ module.exports = {
   //! GİRİŞ VE ÇIKIŞ İŞLEMLERİ
 
   login: async (req, res) => {
+    /*!
+  #swagger.tags = ['Authentication']
+  #swagger.summary='login'
+  #swagger.description='Login with username and password
+ #swagger.parameters['body']={
+   in:'body',
+  required:'true',
+   schema:{
+    username:"testf0",
+    password:"12345"
+  } }
+
+
+ */
+  
+
+
     //' Bir personelin sistem girişi yapmasını sağlar.
     const { username, password } = req.body;
 
@@ -61,6 +78,17 @@ module.exports = {
   },
 
   logout: async (req, res) => {
+
+    /*!
+  #swagger.tags = ['Authentication']
+  #swagger.summary='logout'
+  #swagger.description='delete token'
+
+ */
+
+
+
+
     /* SESSION */
 
     req.session = null; //' Oturum bilgilerini temizler.
@@ -85,7 +113,30 @@ module.exports = {
     if (tokenKey && tokenKey[0] == "Token") { //? yine de kontrolü yaptı sıfırıncı eleman Token mı baktı geri kalanaı silecek
       deleted = await Token.deleteOne({ token: tokenKey[1] });//' Bu, Token modelini kullanarak, token değeri tokenKey[1]'e (yani ayrıştırılmış tokenın ikinci elemanına) eşit olan kaydın veritabanından silinmesini sağlar. Bu işlem asenkron olduğu için await anahtar kelimesi ile beklenir.
     }
+//token süre
+        // if (!tokenData) {
+        //     const tokenKey = passwordEncrypt(user._id + Date.now());
+        //     const expires = new Date(Date.now() + 3600000); // Örneğin, 1 saat sonraya ayarla (3600000 milisaniye = 1 saat)
 
+        //     tokenData = await Token.create({
+        //         userId: user._id,
+        //         token: tokenKey,
+        //         expires: expires
+        //     });
+        // }
+        //                 let tokenData = await Token.findOne({ userId: user._id });
+
+        // if (tokenData) {
+        //     // Şimdiki zaman, tokenın son kullanma zamanından büyük mü kontrol et
+        //     if (new Date() > tokenData.expires) {
+        //         // Token süresi dolmuş
+        //         console.log("Token'ın süresi doldu.");
+        //         // Burada tokenı silmek veya kullanıcıya yeni bir token oluşturması için yönlendirme yapmak gibi işlemler yapılabilir
+        //     } else {
+        //         // Token geçerli
+        //         console.log("Token geçerli.");
+        //     }
+        // }
     /* TOKEN */
 
     res.status(200).send({
