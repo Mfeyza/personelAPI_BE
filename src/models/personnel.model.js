@@ -19,7 +19,7 @@ const PersonnelSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId, //? MongoDB'nin benzersiz tanımlayıcısı tipinde.
       ref: "Department", //' Bu alanın "Department" modeline referans verdiğini belirtir.
       required: true, //! Bu alanın zorunlu olduğunu belirtir.
-    },
+    }, 
 
     username: {
       type: String,
