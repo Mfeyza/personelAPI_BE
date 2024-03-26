@@ -142,8 +142,8 @@ app.all("/", (req, res) => {
     api: {
       documents: {
         swagger: "https://personel-api-be.vercel.app/documents/swagger/",
-        redoc: "http://127.0.0.1:8000/documents/redoc",
-        json: "http://127.0.0.1:8000/documents/json",
+        redoc: "https://personel-api-be.vercel.app/documents/redoc",
+        json: "https://personel-api-be.vercel.app/documents/json",
       },
       contact: "contact@clarusway.com", //'ana url e bunları ekledik proje başlatıldığında dökümanları görelim diye
     },
