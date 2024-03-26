@@ -67,9 +67,16 @@ app.use('/documents/json', (req, res) => {
 })
 
 // //? SWAGGER:
+
+
+//? SWAGGER:
 const swaggerUi = require('swagger-ui-express')
 const swaggerJson = require('./swagger.json')
-app.use('/documents/swagger', swaggerUi.serve, swaggerUi.setup(swaggerJson, { swaggerOptions: { persistAuthorization: true } }))
+const options = { customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.0.0/swagger-ui.css',swaggerOptions: { persistAuthorization: true }, customJs: [
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.0.0/swagger-ui-bundle.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.0.0/swagger-ui-standalone-preset.js'
+  ] };
+app.use('/documents/swagger', swaggerUi.serve, swaggerUi.setup(swaggerJson, options))
 //'swagger dökümanını şu url den yayınla, swagger ı başlat, şu ayarlara göre başlat, 1. parametre json dosyası, ikinci çalıştırma ayarları
 // //? REDOC:
 const redoc = require('redoc-express')
